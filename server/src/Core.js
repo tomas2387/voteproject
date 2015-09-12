@@ -25,7 +25,7 @@ export class Core {
 
   vote(state, entryName) {
     return state.updateIn(
-      ['vote', 'score', entryName],
+      ['score', entryName],
       0,
       score => score + 1
     );

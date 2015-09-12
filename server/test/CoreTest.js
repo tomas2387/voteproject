@@ -2,7 +2,7 @@ import {assert} from 'chai';
 import {List, Map} from 'immutable';
 import {Core} from '../src/Core'
 
-suite('[+] Application Logic', () => {
+suite('[+] Core Logic', () => {
   let sut;
   setup(() => {
     sut = new Core();
@@ -112,17 +112,11 @@ suite('[+] Application Logic', () => {
 
     test('creates an score for the voted entry', () => {
       const state = Map({
-        vote: Map({
-          pair: List.of('InternalError', 'our happy ap')
-        }),
-        entries: List.of('stop hacking me', 'stop the loud music')
+        pair: List.of('InternalError', 'our happy ap')
       });
       const expected = Map({
-        vote: Map({
           pair: List.of('InternalError', 'our happy ap'),
           score: Map({'InternalError': 1})
-        }),
-        entries: List.of('stop hacking me', 'stop the loud music')
       });
       const votedName = 'InternalError';
       verifyVote(state, votedName, expected);
@@ -130,18 +124,12 @@ suite('[+] Application Logic', () => {
 
     test('when vote is called with a state with scores it should update the score',  ()=> {
       const state = Map({
-        vote: Map({
           pair: List.of('InternalError', 'our happy ap'),
           score: Map({'InternalError': 3,'our happy ap': 2})
-        }),
-        entries: List.of('stop hacking me', 'stop the loud music')
       });
       const expected = Map({
-        vote: Map({
           pair: List.of('InternalError', 'our happy ap'),
           score: Map({'InternalError': 4,'our happy ap': 2})
-        }),
-        entries: List.of('stop hacking me', 'stop the loud music')
       });
       verifyVote(state, 'InternalError', expected);
     });
