@@ -1,7 +1,7 @@
 import {assert} from 'chai';
 import {List, Map} from 'immutable';
 
-suite('immutability test', () => {
+suite('[+] Immutability Test', () => {
 
     suite('numbers', () => {
 
@@ -60,7 +60,7 @@ suite('immutability test', () => {
             if (currentState.get('guest')) {
                 let guestIndex = currentState.get('guest').indexOf(apName);
                 if (guestIndex !== -1) {
-                    return currentState.set('guest', currentState.get('guest').remove(guestIndex));
+                    return currentState.update('guest', guests => guests.remove(guestIndex));
                 }
             }
 
@@ -69,9 +69,7 @@ suite('immutability test', () => {
 
 
         function addRegisteredAcessPointName(currentState, apName) {
-            return currentState.set('registered',
-                currentState.get('registered').push(apName)
-            );
+            return currentState.update('registered', registered => registered.push(apName));
         }
 
         test('add registered apName should add to registered apName list', () => {

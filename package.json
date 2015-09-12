@@ -15,7 +15,7 @@
     "mocha": "^2.3.2"
   },
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha --ui tdd --compilers js:babel/register --require ./test/test_helper.js --recursive",
+    "test": "node ./node_modules/mocha/bin/mocha --ui tdd --compilers js:babel/register --require ./test/TestHelper.js --recursive",
     "test:watch": "npm run test -- --watch"
   },
   "author": "@tomas2387",
