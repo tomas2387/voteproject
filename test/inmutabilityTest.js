@@ -21,44 +21,44 @@ suite('immutability test', () => {
 
     suite('lists', () => {
 
-        function addUser(list, user) {
-            return list.push(user);
+        function addAcessPointName(list, apName) {
+            return list.push(apName);
         }
 
         test('if a list changes its state should create another list with the changed state', ()=> {
-            let list = List.of('user1', 'user4');
-            let nextState = addUser(list, 'user3');
+            let list = List.of('apName1', 'apName4');
+            let nextState = addAcessPointName(list, 'apName3');
 
-            assert.equal(nextState, List.of('user1', 'user4', 'user3'));
-            assert.equal(list, List.of('user1', 'user4'));
+            assert.equal(nextState, List.of('apName1', 'apName4', 'apName3'));
+            assert.equal(list, List.of('apName1', 'apName4'));
         });
 
         test('indexOf should return the correct index of an item in a list', ()=> {
-            let list = List.of('user1', 'user4', 'user5', 'user88');
-            let actual = list.indexOf('user5');
+            let list = List.of('apName1', 'apName4', 'apName5', 'apName88');
+            let actual = list.indexOf('apName5');
             assert.equal(actual, 2);
         });
 
         test('indexOf should return the correct index of an item in a list with repeated items', ()=> {
-            let list = List.of('user1', 'user4', 'user5', 'user88', 'user5', 'user99');
-            let actual = list.indexOf('user5');
+            let list = List.of('apName1', 'apName4', 'apName5', 'apName88', 'apName5', 'apName99');
+            let actual = list.indexOf('apName5');
             assert.equal(actual, 2);
         });
 
         test('remove an item of a list should create another list with the element removed', ()=> {
-            let list = List.of('user1', 'user4', 'user5', 'user88');
-            let nextState = list.remove(list.indexOf('user5'));
+            let list = List.of('apName1', 'apName4', 'apName5', 'apName88');
+            let nextState = list.remove(list.indexOf('apName5'));
 
-            assert.equal(nextState, List.of('user1', 'user4', 'user88'));
-            assert.equal(list, List.of('user1', 'user4', 'user5', 'user88'));
+            assert.equal(nextState, List.of('apName1', 'apName4', 'apName88'));
+            assert.equal(list, List.of('apName1', 'apName4', 'apName5', 'apName88'));
         });
     });
 
     suite('tree', () => {
 
-        function removeGuestUser(currentState, user) {
+        function removeGuestAcessPointName(currentState, apName) {
             if (currentState.get('guest')) {
-                let guestIndex = currentState.get('guest').indexOf(user);
+                let guestIndex = currentState.get('guest').indexOf(apName);
                 if (guestIndex !== -1) {
                     return currentState.set('guest', currentState.get('guest').remove(guestIndex));
                 }
@@ -68,40 +68,37 @@ suite('immutability test', () => {
         }
 
 
-        function addRegisteredUser(currentState, user) {
+        function addRegisteredAcessPointName(currentState, apName) {
             return currentState.set('registered',
-                currentState.get('registered').push(user)
+                currentState.get('registered').push(apName)
             );
         }
 
-        test('add registered user should add to registered user list', () => {
+        test('add registered apName should add to registered apName list', () => {
             let state = Map({
-                registered: List.of('USER1', 'USER2', 'USER3')
+                registered: List.of('APNAME1', 'APNAME2', 'APNAME3')
             });
-            let nextState = addRegisteredUser(state, 'USER77');
+            let nextState = addRegisteredAcessPointName(state, 'APNAME77');
 
             assert.equal(nextState, Map({
-                registered: List.of('USER1', 'USER2', 'USER3', 'USER77')
+                registered: List.of('APNAME1', 'APNAME2', 'APNAME3', 'APNAME77')
             }));
             assert.equal(state, Map({
-                registered: List.of('USER1', 'USER2', 'USER3')
+                registered: List.of('APNAME1', 'APNAME2', 'APNAME3')
             }));
         });
 
-        test('add registered user should remove from guest user list first', () => {
+        test('add registered apName should remove from guest apName list first', () => {
             let state = Map({
-                registered: List.of('USER1', 'USER2', 'USER3'),
-                guest: List.of('USER99', 'USER221', 'USER304')
+                registered: List.of('APNAME1', 'APNAME2', 'APNAME3'),
+                guest: List.of('APNAME99', 'APNAME221', 'APNAME304')
             });
-            let nextState = addRegisteredUser(removeGuestUser(state, 'USER304'), 'USER304');
+            let nextState = addRegisteredAcessPointName(removeGuestAcessPointName(state, 'APNAME304'), 'APNAME304');
 
             assert.equal(nextState, Map({
-                registered: List.of('USER1', 'USER2', 'USER3', 'USER304'),
-                guest: List.of('USER99', 'USER221')
+                registered: List.of('APNAME1', 'APNAME2', 'APNAME3', 'APNAME304'),
+                guest: List.of('APNAME99', 'APNAME221')
             }));
         });
-
-
     });
-
 });
