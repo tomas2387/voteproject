@@ -19,5 +19,9 @@
     "test:watch": "npm run test -- --watch"
   },
   "author": "@tomas2387",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tomas2387/voteproject.git"
+  }
 }
