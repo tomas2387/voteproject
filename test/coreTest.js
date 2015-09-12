@@ -3,6 +3,10 @@ import {List, Map} from 'immutable';
 import {Core} from '../src/Core'
 
 suite('Application Logic', () => {
+  let sut;
+  setup(() => {
+    sut = new Core();
+  });
 
   suite('setEntries', () => {
 
@@ -20,13 +24,95 @@ suite('Application Logic', () => {
 
     function verify(entries, expected) {
       const state = Map();
-      const core = new Core();
-      const nextState = core.setEntries(state, entries);
+      const nextState = sut.setEntries(state, entries);
       assert.equal(nextState, expected);
     }
 
   });
 
+
+  suite('next', () => {
+
+    test('call next should return the next two access point names for vote', () => {
+
+      const state = Map({
+        entries: List.of('InternalError', 'Happy AP', 'Dont Hack this')
+      });
+      const nextState = sut.next(state);
+
+      assert.equal(nextState, Map({
+        vote: Map({
+          pair: List.of('InternalError', 'Happy AP')
+        }),
+        entries: List.of('Dont Hack this')
+      }));
+    });
+
+    test('call next when there are less than 2 entries left should return one of vote', () => {
+
+            const state = Map({
+              entries: List.of('InternalError')
+            });
+            const nextState = sut.next(state);
+
+            assert.equal(nextState, Map({
+              vote: Map({
+                pair: List.of('InternalError')
+              }),
+              entries: List()
+            }));
+    });
+
+  });
+
+  suite('vote', ()=>{
+
+    test('creates an score for the voted entry', () => {
+        const state = Map({
+          vote: Map({
+            pair: List.of('InternalError', 'our happy ap')
+          }),
+          entries: List.of('stop hacking me', 'stop the loud music')
+        });
+        const nextState = sut.vote(state, 'InternalError');
+
+        assert.equal(nextState, Map({
+          vote: Map({
+            pair: List.of('InternalError', 'our happy ap'),
+            score: Map({
+              'InternalError': 1
+            })
+          }),
+          entries: List.of('stop hacking me', 'stop the loud music')
+        }));
+    });
+
+    test('when vote is called with a state with scores it should update the score',  ()=> {
+      const state = Map({
+        vote: Map({
+          pair: List.of('InternalError', 'our happy ap'),
+          score: Map({
+            'InternalError': 3,
+            'our happy ap': 2
+          })
+        }),
+        entries: List.of('stop hacking me', 'stop the loud music')
+      });
+      const nextState = sut.vote(state, 'InternalError');
+
+      assert.equal(nextState, Map({
+        vote: Map({
+          pair: List.of('InternalError', 'our happy ap'),
+          score: Map({
+            'InternalError': 4,
+            'our happy ap': 2
+          })
+        }),
+        entries: List.of('stop hacking me', 'stop the loud music')
+      }));
+    });
+
+  });
 
 
 });
