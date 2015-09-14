@@ -4,9 +4,9 @@
   "description": "http://teropa.info/blog/2015/09/10/full-stack-redux-tutorial.html",
   "main": "index.js",
   "scripts": {
-    "pack": "node ./node_modules/webpack/bin/webpack.js",
-    "start": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js",
-    "test": "node ./node_modules/mocha/bin/mocha --ui tdd --compilers js:babel-core/register --require ./test/TestHelper.js 'test/**/*.@(js|jsx)'",
+    "pack": "./node_modules/.bin/webpack",
+    "start": "./node_modules/.bin/webpack-dev-server",
+    "test": "./node_modules/.bin/mocha --ui tdd --compilers js:babel-core/register --require ./test/TestHelper.js 'test/**/*.@(js|jsx)'",
     "test:watch": "npm run test -- --watch"
   },
   "author": "@tomas2387",
@@ -23,6 +23,7 @@
     "webpack-dev-server": "^1.10.1"
   },
   "dependencies": {
+    "immutable": "^3.7.5",
     "react": "^0.13.3"
   }
 }

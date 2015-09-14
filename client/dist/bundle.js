@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e46a89aa1dd7df7bcab1"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "2eac917aa79865e48b33"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -7997,7 +7997,7 @@
 
 	var _componentsVoting2 = _interopRequireDefault(_componentsVoting);
 
-	var pair = ['ErrorInterno', 'FreeWifi'];
+	var pair = ['ErrorInterno', 'wifi gratis'];
 
 	_react2['default'].render(_react2['default'].createElement(_componentsVoting2['default'], { pair: pair }), document.getElementById('app'));
 
@@ -28813,19 +28813,40 @@
 	  getPair: function getPair() {
 	    return this.props.pair || [];
 	  },
+	  isDisabled: function isDisabled() {
+	    return !!this.props.hasVoted;
+	  },
+	  hasVotedFor: function hasVotedFor(entry) {
+	    return this.props.hasVoted === entry;
+	  },
 	  render: function render() {
+	    var _this = this;
+
 	    return _reactAddons2["default"].createElement(
 	      "div",
 	      { className: "voting" },
-	      this.getPair().map(function (entry) {
+	      this.props.winner ? _reactAddons2["default"].createElement(
+	        "div",
+	        { ref: "winner" },
+	        "Winner is ",
+	        this.props.winner,
+	        "!"
+	      ) : this.getPair().map(function (entry) {
 	        return _reactAddons2["default"].createElement(
 	          "button",
-	          { key: entry },
+	          { key: entry, disabled: _this.isDisabled(), onClick: function () {
+	              return _this.props.vote(entry);
+	            } },
 	          _reactAddons2["default"].createElement(
 	            "h1",
 	            null,
 	            entry
-	          )
+	          ),
+	          _this.hasVotedFor(entry) ? _reactAddons2["default"].createElement(
+	            "div",
+	            { className: "label" },
+	            "Voted"
+	          ) : null
 	        );
 	      })
 	    );
