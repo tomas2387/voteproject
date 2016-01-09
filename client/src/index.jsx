@@ -1,18 +1,30 @@
 import React from 'react';
-import Voting from './components/Voting';
-import Router, {Route, DefaultRoute} from 'react-router';
+import VotingContainer from './components/Voting';
+import ReactDOM from 'react-dom';
+import {createStore} from 'redux';
+import {Provider} from 'react-redux';
+import reducer from './reducer';
+import Router, {Route} from 'react-router';
 import App from './components/App';
-import Results from './components/Results';
+import {ResultsContainer} from './components/Results';
+import io from 'socket.io-client';
 
-const routes = <Route handler={App}>
-  <Route path="/results" handler={Results} />
-  <DefaultRoute handler={Voting} />
+const store = createStore(reducer);
+
+const socket = io(`${location.protocol}//${location.hostname}:8090`);
+socket.on('state', state => {
+  "use strict";
+  store.dispatch({type: 'SET_STATE', state: state});
+});
+
+const routes = <Route component={App}>
+  <Route path="/results" component={ResultsContainer} />
+  <Route path="/" component={VotingContainer} />
 </Route>;
 
-Router.run(routes, (Root) => {
-  "use strict";
-  React.render(
-    <Root />,
-    document.getElementById('app')
-  );
-});
+ReactDOM.render(
+  <Provider store="store">
+    <Router>{routes}</Router>
+  </Provider>,
+  document.getElementById('app')
+);

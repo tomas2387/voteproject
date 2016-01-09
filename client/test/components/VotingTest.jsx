@@ -1,10 +1,12 @@
-import React from 'react/addons';
-import Voting from '../../src/components/Voting';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-addons-test-utils';
+import {Voting} from '../../src/components/Voting';
 import {assert} from 'chai';
 import {List} from 'immutable';
 
 
-const {renderIntoDocument,scryRenderedDOMComponentsWithTag,Simulate} = React.addons.TestUtils;
+const {renderIntoDocument,scryRenderedDOMComponentsWithTag,Simulate} = ReactTestUtils;
 
 suite('> Voting', ()=>{
   "use strict";
@@ -16,8 +18,8 @@ suite('> Voting', ()=>{
     const buttons = scryRenderedDOMComponentsWithTag(component, 'button');
 
     assert.equal(buttons.length, 2);
-    assert.equal(buttons[0].getDOMNode().textContent, 'InternalError');
-    assert.equal(buttons[1].getDOMNode().textContent, 'WIFI');
+    assert.equal(buttons[0].textContent, 'InternalError');
+    assert.equal(buttons[1].textContent, 'WIFI');
   });
 
   test('invokes callback when clicked a button',  ()=>{
@@ -28,7 +30,7 @@ suite('> Voting', ()=>{
       <Voting pair={["Trainspotting", "28 Days Later"]} vote={vote}/>
     );
     const buttons = scryRenderedDOMComponentsWithTag(component, 'button');
-    Simulate.click(buttons[0].getDOMNode());
+    Simulate.click(buttons[0]);
 
     assert.equal(votedWith, 'Trainspotting');
   });
@@ -36,14 +38,14 @@ suite('> Voting', ()=>{
   test('click to button vote makes it disabled', ()=>{
     const buttons = renderVotedButtons();
     assert.equal(buttons.length, 2);
-    assert.equal(buttons[0].getDOMNode().hasAttribute('disabled'), true);
-    assert.equal(buttons[1].getDOMNode().hasAttribute('disabled'), true);
+    assert.equal(buttons[0].hasAttribute('disabled'), true);
+    assert.equal(buttons[1].hasAttribute('disabled'), true);
   });
 
   test('when voted it should add a label to warn the user that it has already voted', ()=>{
     const buttons = renderVotedButtons();
     assert.equal(buttons.length, 2);
-    assert.include(buttons[1].getDOMNode().textContent, 'Voted');
+    assert.include(buttons[1].textContent, 'Voted');
   });
 
   function renderVotedButtons() {
@@ -61,7 +63,7 @@ suite('> Voting', ()=>{
     const buttons = scryRenderedDOMComponentsWithTag(component, 'button');
     assert.equal(buttons.length, 0);
 
-    const winner = React.findDOMNode(component.refs.winner);
+    const winner = ReactDOM.findDOMNode(component.refs.winner);
     assert.notEqual(winner, null);
     assert.include(winner.textContent, 'Trainspotting');
   });
@@ -73,26 +75,27 @@ suite('> Voting', ()=>{
     );
 
     let firstButton = scryRenderedDOMComponentsWithTag(component, 'button')[0];
-    assert.equal(firstButton.getDOMNode().textContent, 'Trainspotting');
+    assert.equal(firstButton.textContent, 'Trainspotting');
 
     pair[0] = 'Sunshine';
+
     component.setProps({pair: pair});
     firstButton = scryRenderedDOMComponentsWithTag(component, 'button')[0];
-    assert.equal(firstButton.getDOMNode().textContent, 'Trainspotting');
+    assert.equal(firstButton.textContent, 'Trainspotting');
   });
 
   test('does update DOM when prop changes', () => {
-   let pair = List.of('Trainspotting', '28 Days Later');
-   let component = renderIntoDocument(
+   const pair = List.of('Trainspotting', '28 Days Later');
+   const component = renderIntoDocument(
      <Voting pair={pair} />
    );
 
    let firstButton = scryRenderedDOMComponentsWithTag(component, 'button')[0];
-   assert.equal(firstButton.getDOMNode().textContent, 'Trainspotting');
+   assert.equal(firstButton.textContent, 'Trainspotting');
 
-   pair = pair.set(0, 'Sunshine');
-   component.setProps({pair: pair});
+   const newPair = pair.set(0, 'Sunshine');
+   component.setProps({pair: newPair});
    firstButton = scryRenderedDOMComponentsWithTag(component, 'button')[0];
-   assert.equal(firstButton.getDOMNode().textContent, 'Sunshine');
+   assert.equal(firstButton.textContent, 'Sunshine');
  });
 });
