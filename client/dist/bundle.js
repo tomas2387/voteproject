@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7a589c02fc19386dae55"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "3d35ba742bece183c8ef"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -28021,6 +28021,7 @@
 
 	  return {
 	    pair: state.getIn(['vote', 'pair']),
+	    hasVoted: state.get('hasVoted'),
 	    winner: state.get('winner')
 	  };
 	}
@@ -29551,7 +29552,9 @@
 
 	  switch (action.type) {
 	    case 'SET_STATE':
-	      return setState(state, action.state);
+	      return resetVote(setState(state, action.state));
+	    case 'VOTE':
+	      return vote(state, action.entry);
 	  }
 
 	  return state;
@@ -29563,6 +29566,29 @@
 	  "use strict";
 
 	  return state.merge(newState);
+	}
+
+	function resetVote(state) {
+	  "use strict";
+
+	  var hasVoted = state.get('hasVoted');
+	  var currentPair = state.getIn(['vote', 'pair'], (0, _immutable.List)());
+	  if (hasVoted && !currentPair.includes(hasVoted)) {
+	    return state.remove('hasVoted');
+	  } else {
+	    return state;
+	  }
+	}
+
+	function vote(state, entry) {
+	  "use strict";
+
+	  var currentPair = state.getIn(['vote', 'pair']);
+	  if (currentPair && currentPair.includes(entry)) {
+	    return state.set('hasVoted', entry);
+	  } else {
+	    return state;
+	  }
 	}
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(266); if (makeExportsHot(module, __webpack_require__(139))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "reducer.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }

@@ -11,9 +11,10 @@ import io from 'socket.io-client';
 
 const store = createStore(reducer);
 
-const socket = io(`${location.protocol}//${location.hostname}:8090`);
+const socket = io(`${location.protocol}//${location.hostname}:9090`);
 socket.on('state', state => {
   "use strict";
+  console.log('State received', state);
   store.dispatch({type: 'SET_STATE', state: state});
 });
 
@@ -23,7 +24,7 @@ const routes = <Route component={App}>
 </Route>;
 
 ReactDOM.render(
-  <Provider store="store">
+  <Provider store={store}>
     <Router>{routes}</Router>
   </Provider>,
   document.getElementById('app')
